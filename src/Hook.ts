@@ -1,9 +1,9 @@
 class Hook {
   private _args: string[];
-  name?: string;
-  taps: Tap<TapType>[];
+  private name?: string;
+  private taps: Tap[];
   private _call: TFunction;
-  call: TFunction;
+  private call: TFunction;
 
   constructor(args: string[] = [], name?: string) {
     this._args = args;
@@ -12,6 +12,7 @@ class Hook {
     this._call = this.CALL_DELEGATE;
     this.call = this.CALL_DELEGATE;
     this.compile = this.compile;
+    this.tap = this.tap;
   }
 
   /**
@@ -45,7 +46,7 @@ class Hook {
             fn,
           }
         : options;
-    /* 这里源码还做了一些边界情况处理，因为源码用JS编写，我用的TS，所以省略了 */
+    /* 这里源码还做了一些边界情况处理和拦截功能，这里省略了 */
     this._insert(newOpt);
   }
 
@@ -97,3 +98,7 @@ class Hook {
     // this.promise = this._promise;
   }
 }
+
+Object.setPrototypeOf(Hook.prototype, null);
+
+export default Hook;
