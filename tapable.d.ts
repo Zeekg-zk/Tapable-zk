@@ -1,6 +1,8 @@
 type TapType = "sync" | "async" | "promise";
 type HookCompileOptions = {
   type: TapType;
+  taps: Tap<TapType>[];
+  args: string[];
 };
 type TFunction = (...args: any[]) => any;
 
@@ -20,28 +22,3 @@ type TapFunction<T extends TapType = TapType> = T extends "sync"
   : T extends "promise"
   ? (...args: any[]) => Promise<any>
   : never;
-
-type TapOptions<T extends TapType = TapType> = {
-  name: string;
-  stage?: number;
-  context?: boolean;
-  before?: string | string[];
-} & (T extends "sync"
-  ? {
-      type?: "sync";
-      fn?: TapFunction<"sync">;
-    }
-  : T extends "async"
-  ? {
-      type?: "async";
-      fn?: TapFunction<"async">;
-    }
-  : T extends "promise"
-  ? {
-      type?: "promise";
-      fn?: TapFunction<"promise">;
-    }
-  : {
-      type?: T;
-      fn?: TapFunction<T>;
-    });
