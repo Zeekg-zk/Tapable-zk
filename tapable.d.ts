@@ -22,3 +22,12 @@ type TapFunction<T extends TapType = TapType> = T extends "sync"
   : T extends "promise"
   ? (...args: any[]) => Promise<any>
   : never;
+
+type THookCodeContent = {
+  onError: TFunction;
+  onDone: TFunction;
+  doneReturns?: boolean;
+  onResult?: TFunction;
+  resultReturns?: boolean;
+  rethrowIfPossible?: boolean;
+};

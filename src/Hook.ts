@@ -4,6 +4,7 @@ class Hook {
   private taps: Tap[];
   private _call: TFunction;
   private call: TFunction;
+  _x?: TapFunction[];
 
   constructor(args: string[] = [], name?: string) {
     this._args = args;
@@ -13,6 +14,7 @@ class Hook {
     this.call = this.CALL_DELEGATE;
     this.compile = this.compile;
     this.tap = this.tap;
+    this._x = undefined;
   }
 
   /**
