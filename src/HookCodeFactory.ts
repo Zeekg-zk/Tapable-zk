@@ -35,7 +35,6 @@ class HookCodeFactory {
             onResult: (result) => `return ${result};\n`,
             resultReturns: true,
             onDone: () => "",
-            rethrowIfPossible: true,
           })}
           `
         );
@@ -79,7 +78,41 @@ class HookCodeFactory {
     throw new Error("Abstract: content function should be overridden.");
   }
 
+  callTap(tapIndex: number, config: THookCodeContent) {
+    const codeArr: string[] = [];
+    let hasTapCached = false;
+    codeArr.push(`var _fn${tapIndex} = ${this.getTapFn(tapIndex)};`);
+    const tap = this.options!.taps[tapIndex];
+    switch (tap.type) {
+      case "sync":
+        if (config.onResult) {
+          codeArr.push(
+            `var _result${tapIndex} = _fn${tapIndex}(${this.args({
+              before: tap.context ? "_context" : undefined,
+            })})`
+          );
+          codeArr.push(config.onResult(`_result${tapIndex}`));
+        } else {
+          codeArr.push(
+            `_fn${tapIndex}(${this.args({
+              before: tap.context ? "_context" : undefined,
+            })})`
+          );
+        }
+        codeArr.push(config.onDone());
+        break;
+      case "async":
+        break;
+      case "promise":
+        break;
+    }
+  }
+
   callTapsSeries(config: THookCodeContent) {
     
+  }
+
+  getTapFn(idx: number) {
+    return `_x[${idx}]`;
   }
 }
